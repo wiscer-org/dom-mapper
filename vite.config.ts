@@ -1,24 +1,26 @@
-import { defineConfig } from 'vite';
-import hotReloadExtension from 'hot-reload-extension-vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import hotReloadExtension from "hot-reload-extension-vite";
 
 export default defineConfig({
-    plugins: [hotReloadExtension({
-        log: true,
-        backgroundPath: 'src/background.ts' // relative path to background script file
+  plugins: [
+    hotReloadExtension({
+      log: true,
+      backgroundPath: "src/background.ts",
     }),
-    react()],
-    build: {
-        outDir: 'dist',
-        rollupOptions: {
-            input: {
-                main: 'src/main.tsx',
-                content: 'src/content.ts',
-                background: 'src/background.ts'
-            },
-            output: {
-                entryFileNames: '[name].js'
-            }
-        }
-    }
+  ],
+  build: {
+    outDir: "dist",
+    rollupOptions: {
+      input: {
+        main: "src/main.ts",
+        content: "src/content.ts",
+        background: "src/background.ts",
+      },
+      output: {
+        entryFileNames: "[name].js",
+        chunkFileNames: "[name].js",
+        assetFileNames: "[name].[ext]",
+      },
+    },
+  },
 });
