@@ -19,11 +19,16 @@ const defaultOptions: TextMapperOptions = {
 
 export default class TextMapper {
   private parent: DomMapper;
+  static KEEP_ELEMENT: string = "text-wrapper-keep";
   constructor(parent: DomMapper) {
     this.parent = parent;
     this.init();
   }
+
   async init() {
+    // Wait a little for DOM and screen reader is ready
+    await new Promise((r) => setTimeout(r, 300));
+
     // Initialization logic for TextMapper
     this.parent.announce({
       msg: "Text Mapper is ready",
@@ -34,10 +39,10 @@ export default class TextMapper {
   /**
    * Open the TextMapper functionality.
    */
-  async open() {
-    console.log("TextMapper opened");
-    // Add event listeners or other startup logic here
-  }
+  // async open() {
+  //   console.log("TextMapper opened");
+  //   // Add event listeners or other startup logic here
+  // }
 
   async createMap(
     input: TextMapperInput,
@@ -46,42 +51,250 @@ export default class TextMapper {
     // Merge default options with initial options
     const options: TextMapperOptions = { ...defaultOptions, ...initialOptions };
 
-    console.log("Creating text map");
-
     // Clone the document
+    this.parent.announce({ msg: "cloning dom tree" });
     let domTree: HTMLElement = document.documentElement.cloneNode(
       true
     ) as HTMLElement;
 
-    // Find all text nodes in the document
+    console.log("cloned DOM:");
+    console.log(domTree.children);
 
-    // Mark all the elements we want to keep by adding `TextMapper.KEEP_ATTRIBUTE` attribute to them.
+    // Find all direct elements that contain the text nodes in the document
+    this.parent.announce({ msg: "Finding elements by texts" });
+    const elementsWithText = await this.findElementsByTextContents(
+      domTree,
+      input
+    );
+    console.log("Elements with text: ");
+    console.log(elementsWithText);
 
-    // Remove all elements that are not marked with `TextMapper.KEEP_ATTRIBUTE` attribute.
-
-    // We have a new DOM tree with only the elements we want to keep.
-
-    this.renderMap(domTree);
-  }
-
-  async renderMap(domTree: HTMLElement) {
-    console.log("Rendering text map");
-
-    // Create a new window to display the map
-    const mapWindow = window.open("", "_blank");
-    if (!mapWindow) {
-      console.error("Failed to open map window");
-      return;
+    // Check if elements with the given texts are found
+    if (elementsWithText.length === 0) {
+      console.warn("[TextMapper] Can't find elements for the given texts");
+      console.warn(input);
     }
 
-    // Write the HTML content to the new window
-    mapWindow.document.write(
-      "<!DOCTYPE html><html><head><title>Text Map</title></head><body>"
-    );
-    mapWindow.document.write(domTree.outerHTML);
-    mapWindow.document.write("</body></html>");
-    mapWindow.document.close();
+    // Mark all the elements we want to keep by adding `TextMapper.KEEP_ELEMENT` attribute to them.
+    this.parent.announce({
+      msg: `Mark all parent elements with TextMapper.KEEP_ELEMENT`,
+    });
+    await this.markAllParentElements(domTree, elementsWithText);
 
-    console.log("Text map rendered in new window");
+    // Remove all elements that are not marked with `TextMapper.KEEP_ELEMENT` attribute.
+    this.parent.announce({
+      msg: `Removing all elements that does not have ${TextMapper.KEEP_ELEMENT} attribute`,
+    });
+    await this.removeChildrenWithoutMark(domTree);
+
+    // Remove the added attribute
+    await this.removeMarkAttribute(domTree);
+
+    // We have a new DOM tree with only the elements we want to keep.
+    this.parent.announce({ msg: "About to send the cloned DOM to background" });
+
+    // Remove HTML comments
+    await this.removeComments(domTree);
+
+    // Remove the unwanted attributes
+    await this.cleanAttributes(domTree, []);
+
+    // Remove the unwanted attribute values
+    await this.cleanAttributeValues(domTree, []);
+
+    this.parent.announce({
+      msg: "TextMapper: ready to send to background.",
+    });
+    this.sendToBackground(domTree);
+  }
+  /**
+   * Find all elements that is a parent of the exact texts
+   * @param domTree
+   * @param input
+   */
+  async findElementsByTextContents(
+    domTree: HTMLElement,
+    input: TextMapperInput
+  ) {
+    const textsToSearch = input.textContents;
+    const foundElements: HTMLElement[] = [];
+
+    // Walk through all text nodes in the DOM tree
+    const walker = document.createTreeWalker(
+      domTree,
+      NodeFilter.SHOW_TEXT,
+      null
+    );
+
+    let textNode: Text | null;
+    while ((textNode = walker.nextNode() as Text)) {
+      // Get the text content and trim whitespace
+      const textContent = textNode.textContent?.trim();
+
+      if (!textContent) continue;
+
+      // Check if this text node contains any of our target texts
+      for (const searchText of textsToSearch) {
+        if (textContent.includes(searchText.trim())) {
+          // Find the direct parent element of this text node
+          const parentElement = textNode.parentElement;
+
+          if (parentElement && !foundElements.includes(parentElement)) {
+            foundElements.push(parentElement);
+            console.log(
+              `Found text "${searchText}" in element:`,
+              parentElement.tagName,
+              parentElement.className
+            );
+          }
+        }
+      }
+    }
+
+    this.parent.announce({
+      msg: `Found ${foundElements.length} elements containing target texts`,
+    });
+
+    return foundElements;
+  }
+  /**
+   * Mark all the parents of the given elements, up to the `document`
+   * @param domTree
+   * @param elementsWithText
+   */
+  async markAllParentElements(
+    domTree: HTMLElement,
+    elementsWithText: HTMLElement[]
+  ) {
+    let markedCount = 0;
+
+    // Iterate through each element that contains our target text
+    for (const element of elementsWithText) {
+      let currentElement: HTMLElement | null = element;
+
+      // Traverse up the DOM tree until we reach the top (domTree)
+      while (currentElement && currentElement !== domTree.parentElement) {
+        // Mark this element to keep it
+        if (!currentElement.hasAttribute(TextMapper.KEEP_ELEMENT)) {
+          currentElement.setAttribute(TextMapper.KEEP_ELEMENT, "true");
+          markedCount++;
+        }
+
+        // Move up to the parent element
+        currentElement = currentElement.parentElement;
+
+        // Stop if we've reached the document root or beyond our domTree
+        if (currentElement === domTree) {
+          // Mark the domTree itself as well
+          if (!currentElement.hasAttribute(TextMapper.KEEP_ELEMENT)) {
+            currentElement.setAttribute(TextMapper.KEEP_ELEMENT, "true");
+            markedCount++;
+          }
+          break;
+        }
+      }
+    }
+
+    this.parent.announce({
+      msg: `Marked ${markedCount} elements with ${TextMapper.KEEP_ELEMENT} attribute`,
+    });
+
+    console.log(`Total elements marked for keeping: ${markedCount}`);
+  }
+  /**
+   * Clean / Remove elements that does not have the mark.
+   * @param parentElement
+   */
+  async removeChildrenWithoutMark(parentElement: HTMLElement) {
+    // Get all child elements
+    const children = Array.from(parentElement.children);
+
+    // Iterate through each child
+    for (const child of children) {
+      if (!child.hasAttribute(TextMapper.KEEP_ELEMENT)) {
+        // Remove the child if it doesn't have the mark
+        child.remove();
+      } else {
+        // Recursively check this child's children
+        await this.removeChildrenWithoutMark(child as HTMLElement);
+      }
+    }
+  }
+  /**
+   * Remove HTML comments inside the given DOM tree
+   */
+  async removeComments(domTree: HTMLElement) {
+    // Create a TreeWalker to find all comment nodes
+    const walker = document.createTreeWalker(
+      domTree,
+      NodeFilter.SHOW_COMMENT,
+      null
+    );
+
+    // Collect all comment nodes first (don't remove during traversal)
+    const commentNodes: Comment[] = [];
+    let commentNode;
+    while ((commentNode = walker.nextNode())) {
+      commentNodes.push(commentNode as Comment);
+    }
+
+    console.log(`Found ${commentNodes.length} comment nodes to remove`);
+
+    // Now remove all collected comment nodes
+    let removedCount = 0;
+    commentNodes.forEach((node) => {
+      if (node.parentNode) {
+        console.log("Removing comment node:", node.textContent?.trim());
+        node.parentNode.removeChild(node);
+        removedCount++;
+      }
+    });
+
+    console.log(`Successfully removed ${removedCount} comment nodes`);
+  }
+
+  /**
+   * Clean attributes from elements
+   * @param domTree
+   * @param attributePatterns string[] Array of attribute patterns to be removed
+   */
+  async cleanAttributes(domTree: HTMLElement, attributePatterns: string[]) {
+    // Do nothing for now
+  }
+  /**
+   * Clean the values of attributes with a match with the given attribute value patterns
+   * Example: An element that has several class name, which one of the class name is `_ng-example`.
+   * If matched, the specific `_ng-example` will be removed without removing other class names.
+   * @param domTree
+   * @param attributeValuePatterns
+   */
+  async cleanAttributeValues(
+    domTree: HTMLElement,
+    attributeValuePatterns: string[]
+  ) {
+    // Do nothing for now
+  }
+
+  /**
+   * Remove the added attribute TextMapper.KEEP_ATTRIBUTE
+   * @param domTree
+   */
+  async removeMarkAttribute(domTree: HTMLElement) {
+    // Remove the mark attribute from all elements
+    const markedElements = domTree.querySelectorAll(
+      `[${TextMapper.KEEP_ELEMENT}]`
+    );
+    markedElements.forEach((element) => {
+      element.removeAttribute(TextMapper.KEEP_ELEMENT);
+    });
+
+    this.parent.announce({
+      msg: `Removed ${TextMapper.KEEP_ELEMENT} attribute from ${markedElements.length} elements`,
+    });
+  }
+  async sendToBackground(domTree: HTMLElement) {
+    console.log("Sending cloned DOM to background:");
+    console.log(domTree);
+    console.log(domTree.children);
   }
 }
