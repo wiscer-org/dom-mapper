@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>DOM Mapper DevTools</title>
+    <style>
+        body {
+            margin: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text {
+            color: #666;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+
+        .status {
+            background: #e8f5e8;
+            color: #2d5a2d;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        /* Text Mapper Section Styles */
+        .text-mapper-section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+            text-align: left;
+        }
+
+        .section-header h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .section-header p {
+            margin: 0 0 20px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .map-button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .map-button:hover {
+            background: #3367d6;
+        }
+
+        .map-button:active {
+            background: #2851a3;
+        }
+
+        .status-text {
+            margin-top: 15px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-text.loading {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .status-text.success {
+            background: #e8f5e8;
+            color: #2d5a2d;
+        }
+
+        .status-text.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🛠️ DOM Mapper DevTools</h1>
+        <div class="welcome-text">Welcome custom dev tools</div>
+        <div class="status">
+            ✅ DevTools panel is ready
+        </div>
+        <p>This is your custom DOM Mapper development tools panel.</p>
+
+        <!-- Text Mapper section will be inserted here by JavaScript -->
+        <div id="textMapperContainer"></div>
+    </div>
+
+    <script src="text-mapper-ui.js"></script>
+    <script src="devtools-panel.js"></script>
+</body>
+
+</html>

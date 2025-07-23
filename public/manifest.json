@@ -20,5 +20,6 @@
       "js": ["content.js"]
     }
   ],
-  "permissions": ["scripting", "activeTab"]
+  "devtools_page": "devtools.html",
+  "permissions": ["scripting", "activeTab", "tabs"]
 }
