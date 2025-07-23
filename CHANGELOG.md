@@ -10,8 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Content script create hidden element with aria-live attribute to announce to screen reader. This used as debugging tool.
 - Clone DOM with content script.
 - Clean elements of the cloned DOM in content script.
-- Convert the cloned DOM to background, then relay to custom Dev Tool.
-- Render Custom Dev Tool with React.
+- Render Custom Dev Tool, DOM Mapper and Text Mapper,with Vanilla JS.
+
+## [On progress]
+
+- Provide form and button to trigger Text Mapper function in content script.
+- Send the cloned DOM to background, then relay to custom Dev Tool.
 - Custom Dev Tool display as tree view with React library: accessible-tree-view.
 
 ## [0.1.0] - 2025-07-20
