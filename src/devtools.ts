@@ -1,6 +1,5 @@
 // DevTools script that creates a custom panel
 // This runs in the DevTools context - separate from the panel
-declare const chrome: any;
 
 console.log("🔧 DevTools context: Initializing DOM Mapper DevTools");
 
