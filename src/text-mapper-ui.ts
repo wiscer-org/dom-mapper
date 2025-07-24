@@ -1,8 +1,6 @@
 // Text Mapper module for DevTools panel
 // This handles the Text Mapper functionality
 
-declare const chrome: any;
-
 export class TextMapperUI {
   private container: HTMLElement;
   private backgroundPort: any = null;
