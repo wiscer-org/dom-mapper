@@ -36,14 +36,6 @@ export default class TextMapper {
     console.log("TextMapper is ready to interact with text content");
   }
 
-  /**
-   * Open the TextMapper functionality.
-   */
-  // async open() {
-  //   console.log("TextMapper opened");
-  //   // Add event listeners or other startup logic here
-  // }
-
   async createMap(
     input: TextMapperInput,
     initialOptions: Partial<TextMapperOptions> = defaultOptions

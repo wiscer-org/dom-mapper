@@ -3,7 +3,7 @@ import TextMapper from "./TextMapper";
 export default class DomMapper {
   private parentElement = document.createElement("div");
   private announcerElement = document.createElement("div");
-  private textMapper: TextMapper | undefined;
+  public textMapper: TextMapper | undefined;
 
   constructor() {}
   /**
@@ -15,15 +15,6 @@ export default class DomMapper {
 
     // Start the components
     this.textMapper = new TextMapper(this);
-
-    // Input below is for current testing only
-    const inputs = {
-      textContents: ["TreeWalker API: Motivation and View"],
-    };
-
-    // Give a time to show sidebar manually
-    await new Promise((r) => setTimeout(r, 15e3));
-    this.textMapper.createMap(inputs);
   }
 
   async init() {

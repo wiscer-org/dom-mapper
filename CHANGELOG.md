@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clone DOM with content script.
 - Clean elements of the cloned DOM in content script.
 - Render Custom Dev Tool, DOM Mapper and Text Mapper,with Vanilla JS.
+- Provide form and button to trigger Text Mapper function in content script.
+- Send the cloned DOM to background, then relay to custom Dev Tool.
 
 ## [On progress]
 
-- Provide form and button to trigger Text Mapper function in content script.
-- Send the cloned DOM to background, then relay to custom Dev Tool.
 - Custom Dev Tool display as tree view with React library: accessible-tree-view.
 
 ## [0.1.0] - 2025-07-20

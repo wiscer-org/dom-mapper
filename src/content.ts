@@ -28,7 +28,16 @@ console.log("DOMMapper content script loaded");
             `🔍 Processing ${searchTexts.length} search texts:`,
             searchTexts
           );
-          // TODO: Use searchTexts for actual text mapping functionality
+
+          // Set the search texts as inputs
+          const inputs = {
+            textContents: searchTexts,
+          };
+
+          // Map by texts
+          domMapper.textMapper
+            ? domMapper.textMapper.createMap(inputs)
+            : console.warn("text mapper is undefined");
         } else {
           console.log("⚠️ No search texts provided");
         }
