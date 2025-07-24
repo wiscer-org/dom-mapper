@@ -13,25 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     new (window as any).TextMapperUI(textMapperContainer);
   }
 
-  // Example: Add click handlers, communicate with content scripts, etc.
-  const container = document.querySelector(".container");
-  if (container) {
-    container.addEventListener("click", () => {
-      console.log("🎨 Panel context: DevTools panel clicked");
-
-      // Example: Send message to content script
-      chrome.tabs.query(
-        { active: true, currentWindow: true },
-        (tabs: any[]) => {
-          chrome.tabs.sendMessage(tabs[0].id, {
-            action: "panelClicked",
-            source: "devtools-panel",
-          });
-        }
-      );
-    });
-  }
-
   // Add some visual feedback to show separate contexts
   const welcomeDiv = document.querySelector(".welcome-text");
   if (welcomeDiv) {
