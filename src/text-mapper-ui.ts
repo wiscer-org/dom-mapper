@@ -105,6 +105,14 @@ export class TextMapperUI {
         <p>Map DOM elements by their text content</p>
       </div>
       <div class="section-content">
+        <div class="search-inputs" id="searchInputsContainer">
+          <input type="text" class="search-input" placeholder="Enter text to search...">
+          <input type="text" class="search-input" placeholder="Enter text to search...">
+          <input type="text" class="search-input" placeholder="Enter text to search...">
+        </div>
+        <button id="addInputBtn" class="add-input-button">
+          ➕ Add Input
+        </button>
         <button id="mapByTextsBtn" class="map-button">
           🎯 Map by Texts
         </button>
@@ -120,12 +128,46 @@ export class TextMapperUI {
   private attachEventListeners() {
     const mapButton = document.getElementById("mapByTextsBtn");
     const statusDiv = document.getElementById("textMapperStatus");
+    const addInputBtn = document.getElementById("addInputBtn");
 
     if (mapButton && statusDiv) {
       mapButton.addEventListener("click", () => {
         this.executeTextMapping(statusDiv);
       });
     }
+
+    if (addInputBtn) {
+      addInputBtn.addEventListener("click", () => {
+        this.addSearchInput();
+      });
+    }
+  }
+
+  private addSearchInput() {
+    const container = document.getElementById("searchInputsContainer");
+    if (container) {
+      const newInput = document.createElement("input");
+      newInput.type = "text";
+      newInput.className = "search-input";
+      newInput.placeholder = "Enter text to search...";
+      container.appendChild(newInput);
+    }
+  }
+
+  private getSearchTexts(): string[] {
+    const inputs = document.querySelectorAll(
+      ".search-input"
+    ) as NodeListOf<HTMLInputElement>;
+    const searchTexts: string[] = [];
+
+    inputs.forEach((input) => {
+      const value = input.value.trim();
+      if (value) {
+        searchTexts.push(value);
+      }
+    });
+
+    return searchTexts;
   }
 
   private async executeTextMapping(statusDiv: HTMLElement) {
@@ -148,9 +190,11 @@ export class TextMapperUI {
       statusDiv.textContent = "Sending command via background connection...";
 
       // Send message via connection to background script
+      const searchTexts = this.getSearchTexts();
       const response = await this.sendMessageToBackground({
         action: "executeTextMapper",
         tabId: tabId,
+        searchTexts: searchTexts,
       });
 
       console.log("📨 DevTools: Final response:", response);
