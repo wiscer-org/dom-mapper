@@ -13,11 +13,18 @@
   "devDependencies": {
     "@types/chrome": "^0.1.1",
     "@types/node": "^24.0.15",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "@typescript-eslint/parser": "^8.37.0",
+    "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^8.0.0",
     "hot-reload-extension-vite": "^1.0.13",
     "typescript": "^5.8.3",
     "vite": "^4.5.14"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   }
 }

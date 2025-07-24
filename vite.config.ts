@@ -1,8 +1,10 @@
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import hotReloadExtension from "hot-reload-extension-vite";
 
 export default defineConfig({
   plugins: [
+    react(),
     hotReloadExtension({
       log: true,
       backgroundPath: "src/background.ts",
@@ -16,8 +18,7 @@ export default defineConfig({
         content: "src/content.ts",
         background: "src/background.ts",
         devtools: "src/devtools.ts",
-        "devtools-panel": "src/devtools-panel.ts",
-        "text-mapper-ui": "src/text-mapper-ui.ts",
+        "devtools-panel": "src/devtools-panel.tsx",
       },
       output: {
         entryFileNames: "[name].js",
