@@ -33,6 +33,7 @@ chrome.runtime.onConnect.addListener((port: any) => {
           {
             action: "executeTextMapper",
             source: "background-forwarded",
+            searchTexts: message.searchTexts, // Forward the searchTexts
           },
           (response: any) => {
             console.log(
