@@ -31,10 +31,12 @@ export interface TextMapperResponse {
   success: boolean;
   message: string;
   searchTextsCount: number;
-  data?: {
-    // String tree representation. Will be used in tree visualization by 'react-accessible-treeview' module.
-    domTree: DOMTreeNode;
-    textContentElementsCount: number;
-  };
+  data: TextMapperResponseData;
   error?: string;
+}
+// Interface for the data in the response of Text Mapper operation
+export interface TextMapperResponseData {
+  // String tree representation. Will be used in tree visualization by 'react-accessible-treeview' module.
+  domTree?: DOMTreeNode;
+  textContentElementsCount: number;
 }

@@ -1,4 +1,5 @@
 import DomMapper from "./DomMapper";
+import { TextMapperResponse, TextMapperResponseData } from "./types";
 
 // Content script for DOMMapper Chrome Extension
 console.log("DOMMapper content script loaded");
@@ -22,7 +23,10 @@ console.log("DOMMapper content script loaded");
 
         // Handle the search texts array
         const searchTexts = message.searchTexts || [];
-        let data = null;
+        // Pointer to the next result
+        let data: TextMapperResponseData = {
+          textContentElementsCount: 0,
+        };
 
         if (searchTexts.length > 0) {
           console.log(
@@ -44,39 +48,26 @@ console.log("DOMMapper content script loaded");
           if (!domElementTree)
             throw new Error("DomMapper: Unable clone and trim DOM tree");
 
-          // Define the elements that contain one of the given textContents
-          let textContentElements = [];
-          if (
-            domMapper.textMapper &&
-            domMapper.textMapper.textContentElements
-          ) {
-            textContentElements = domMapper.textMapper.textContentElements;
-          }
-
           const domTree = DomMapper.createTreeNode(domElementTree);
 
-          console.log("DOM (non element) tree:");
-          console.log(domTree);
-
-          // Create data object
-          data = {
-            domTree,
-            textContentElementsCount:
-              domMapper.textMapper?.textContentElements.length,
-          };
+          // Attach the DOM string tree to the response's data
+          data.domTree = domTree;
 
           console.log("📤 Content script sending data:", data);
         } else {
           console.log("⚠️ No search texts provided");
         }
 
-        // Send response back to DevTools
-        sendResponse({
+        const response: TextMapperResponse = {
           success: true,
           message: "Text mapper executed successfully",
           searchTextsCount: searchTexts.length,
-          data: data, // Include the data in the response
-        });
+          // Include the data in the response
+          data,
+        };
+
+        // Send response back to DevTools
+        sendResponse(response);
 
         return true; // Keep the message channel open for async response
       }
