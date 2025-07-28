@@ -25,3 +25,16 @@ export interface DOMTreeMetadata {
 export interface DOMTreeNode extends ITreeNode {
   metadata?: DOMTreeMetadata;
 }
+
+// Response type for TextMapper operations
+export interface TextMapperResponse {
+  success: boolean;
+  message: string;
+  searchTextsCount: number;
+  data?: {
+    // String tree representation. Will be used in tree visualization by 'react-accessible-treeview' module.
+    domTree: DOMTreeNode;
+    textContentElementsCount: number;
+  };
+  error?: string;
+}

@@ -36,12 +36,12 @@ console.log("DOMMapper content script loaded");
           };
 
           // Map by texts
-          const domTree = domMapper.textMapper
+          const domElementTree = domMapper.textMapper
             ? await domMapper.textMapper.createMap(inputs)
             : console.warn("text mapper is undefined");
 
           // The new DOM tree should be not void
-          if (!domTree)
+          if (!domElementTree)
             throw new Error("DomMapper: Unable clone and trim DOM tree");
 
           // Define the elements that contain one of the given textContents
@@ -53,22 +53,16 @@ console.log("DOMMapper content script loaded");
             textContentElements = domMapper.textMapper.textContentElements;
           }
 
-          const nodeTree = DomMapper.createTreeNode(domTree);
+          const domTree = DomMapper.createTreeNode(domElementTree);
 
-          console.log("Node tree:");
-          console.log(nodeTree);
+          console.log("DOM (non element) tree:");
+          console.log(domTree);
 
           // Create data object
           data = {
             domTree,
-            textContentElements: domMapper.textMapper?.textContentElements,
-            nodeTree,
             textContentElementsCount:
               domMapper.textMapper?.textContentElements.length,
-            textData: {
-              firstName: "marson",
-              lastName: "Pardede",
-            },
           };
 
           console.log("📤 Content script sending data:", data);
