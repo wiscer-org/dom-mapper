@@ -9,7 +9,7 @@ console.log("DOMMapper content script loaded");
 
   // Listen for messages from DevTools
   chrome.runtime.onMessage.addListener(
-    (
+    async (
       message: any,
       sender: chrome.runtime.MessageSender,
       sendResponse: (response: any) => void
@@ -22,6 +22,7 @@ console.log("DOMMapper content script loaded");
 
         // Handle the search texts array
         const searchTexts = message.searchTexts || [];
+        let data = null;
 
         if (searchTexts.length > 0) {
           console.log(
@@ -35,9 +36,42 @@ console.log("DOMMapper content script loaded");
           };
 
           // Map by texts
-          domMapper.textMapper
-            ? domMapper.textMapper.createMap(inputs)
+          const domTree = domMapper.textMapper
+            ? await domMapper.textMapper.createMap(inputs)
             : console.warn("text mapper is undefined");
+
+          // The new DOM tree should be not void
+          if (!domTree)
+            throw new Error("DomMapper: Unable clone and trim DOM tree");
+
+          // Define the elements that contain one of the given textContents
+          let textContentElements = [];
+          if (
+            domMapper.textMapper &&
+            domMapper.textMapper.textContentElements
+          ) {
+            textContentElements = domMapper.textMapper.textContentElements;
+          }
+
+          const nodeTree = DomMapper.createTreeNode(domTree);
+
+          console.log("Node tree:");
+          console.log(nodeTree);
+
+          // Create data object
+          data = {
+            domTree,
+            textContentElements: domMapper.textMapper?.textContentElements,
+            nodeTree,
+            textContentElementsCount:
+              domMapper.textMapper?.textContentElements.length,
+            textData: {
+              firstName: "marson",
+              lastName: "Pardede",
+            },
+          };
+
+          console.log("📤 Content script sending data:", data);
         } else {
           console.log("⚠️ No search texts provided");
         }
@@ -47,6 +81,7 @@ console.log("DOMMapper content script loaded");
           success: true,
           message: "Text mapper executed successfully",
           searchTextsCount: searchTexts.length,
+          data: data, // Include the data in the response
         });
 
         return true; // Keep the message channel open for async response

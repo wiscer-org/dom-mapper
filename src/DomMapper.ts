@@ -1,6 +1,32 @@
 import TextMapper from "./TextMapper";
+import { ITreeNode, DOMTreeNode } from "./types";
 
 export default class DomMapper {
+  /**
+   * Parse given attributes and tagName from a HTML Element.
+   * The returned object will be used to be displayed as tree.
+   */
+  static getGivenAttributes(el: HTMLElement): Record<string, any> {
+    let elObject: Record<string, any> = {};
+
+    // Basic properties
+    elObject.tagName = el.tagName.toLowerCase();
+    elObject.id = el.id;
+    elObject.className = el.className;
+
+    // Convert classList to array of strings
+    elObject.classList = Array.from(el.classList);
+
+    // Convert attributes to plain object
+    const attributes: Record<string, string> = {};
+    Array.from(el.attributes).forEach((attr) => {
+      attributes[attr.name] = attr.value;
+    });
+    elObject.attributes = attributes;
+
+    return elObject;
+  }
+
   private parentElement = document.createElement("div");
   private announcerElement = document.createElement("div");
   public textMapper: TextMapper | undefined;
@@ -86,5 +112,37 @@ export default class DomMapper {
         this.announcerElement.removeChild(messageElement);
       }
     }, 5000);
+  }
+
+  /**
+   * Create a tree node from the given element.
+   * The returned value will be used in 'react-accessible-treeview' module.
+   */
+  static createTreeNode(element: HTMLElement): DOMTreeNode {
+    // Convert attributes to metadata properties
+    const metadata: any = {
+      tagName: element.tagName.toLowerCase(),
+      id: element.id || undefined,
+      className: element.className || undefined,
+      textContent: element.textContent?.trim() || undefined,
+    };
+
+    // Add attributes as individual properties
+    Array.from(element.attributes).forEach((attr) => {
+      metadata[`attr_${attr.name}`] = attr.value;
+    });
+
+    const node: DOMTreeNode = {
+      name: `${element.tagName.toLowerCase()}${
+        element.id ? `#${element.id}` : ""
+      }${element.className ? `.${element.className}` : ""}`,
+      isBranch: element.children.length > 0,
+      children: Array.from(element.children).map((child) =>
+        DomMapper.createTreeNode(child as HTMLElement)
+      ),
+      metadata: metadata,
+    };
+
+    return node;
   }
 }

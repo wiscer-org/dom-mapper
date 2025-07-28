@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import { ITreeNode, DOMTreeNode } from "../types";
 
 interface TextMapperPanelProps {
   sendMessage: (message: any) => Promise<any>;

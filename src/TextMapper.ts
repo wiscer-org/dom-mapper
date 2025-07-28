@@ -20,6 +20,9 @@ const defaultOptions: TextMapperOptions = {
 export default class TextMapper {
   private parent: DomMapper;
   static KEEP_ELEMENT: string = "text-wrapper-keep";
+  // HTML elements that contains the given texrt contents
+  textContentElements: HTMLElement[] = [];
+
   constructor(parent: DomMapper) {
     this.parent = parent;
     this.init();
@@ -39,7 +42,7 @@ export default class TextMapper {
   async createMap(
     input: TextMapperInput,
     initialOptions: Partial<TextMapperOptions> = defaultOptions
-  ) {
+  ): Promise<HTMLElement> {
     // Merge default options with initial options
     const options: TextMapperOptions = { ...defaultOptions, ...initialOptions };
 
@@ -54,15 +57,15 @@ export default class TextMapper {
 
     // Find all direct elements that contain the text nodes in the document
     this.parent.announce({ msg: "Finding elements by texts" });
-    const elementsWithText = await this.findElementsByTextContents(
+    this.textContentElements = await this.findElementsByTextContents(
       domTree,
       input
     );
     console.log("Elements with text: ");
-    console.log(elementsWithText);
+    console.log(this.textContentElements);
 
     // Check if elements with the given texts are found
-    if (elementsWithText.length === 0) {
+    if (this.textContentElements.length === 0) {
       console.warn("[TextMapper] Can't find elements for the given texts");
       console.warn(input);
     }
@@ -71,7 +74,7 @@ export default class TextMapper {
     this.parent.announce({
       msg: `Mark all parent elements with TextMapper.KEEP_ELEMENT`,
     });
-    await this.markAllParentElements(domTree, elementsWithText);
+    await this.markAllParentElements(domTree, this.textContentElements);
 
     // Remove all elements that are not marked with `TextMapper.KEEP_ELEMENT` attribute.
     this.parent.announce({
@@ -97,7 +100,8 @@ export default class TextMapper {
     this.parent.announce({
       msg: "TextMapper: ready to send to background.",
     });
-    this.sendToBackground(domTree);
+
+    return domTree;
   }
   /**
    * Find all elements that is a parent of the exact texts
@@ -108,10 +112,15 @@ export default class TextMapper {
     domTree: HTMLElement,
     input: TextMapperInput
   ) {
-    const textsToSearch = input.textContents;
+    // Process the texts to search
+    const textsToSearch = input.textContents.map((text) => {
+      return text.trim().toLowerCase();
+    });
+
+    // Elements that contain at least one of the text to search.
     const foundElements: HTMLElement[] = [];
 
-    // Walk through all text nodes in the DOM tree
+    // Walk through all text nodes in the DOM tree.
     const walker = document.createTreeWalker(
       domTree,
       NodeFilter.SHOW_TEXT,
@@ -121,13 +130,13 @@ export default class TextMapper {
     let textNode: Text | null;
     while ((textNode = walker.nextNode() as Text)) {
       // Get the text content and trim whitespace
-      const textContent = textNode.textContent?.trim();
+      const textContent = textNode.textContent?.trim().toLowerCase();
 
       if (!textContent) continue;
 
       // Check if this text node contains any of our target texts
       for (const searchText of textsToSearch) {
-        if (textContent.includes(searchText.trim())) {
+        if (textContent.includes(searchText)) {
           // Find the direct parent element of this text node
           const parentElement = textNode.parentElement;
 
@@ -283,10 +292,5 @@ export default class TextMapper {
     this.parent.announce({
       msg: `Removed ${TextMapper.KEEP_ELEMENT} attribute from ${markedElements.length} elements`,
     });
-  }
-  async sendToBackground(domTree: HTMLElement) {
-    console.log("Sending cloned DOM to background:");
-    console.log(domTree);
-    console.log(domTree.children);
   }
 }
