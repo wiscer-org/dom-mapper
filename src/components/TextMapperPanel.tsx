@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TreeView, { flattenTree, INode } from "react-accessible-treeview";
 import { ITreeNode, DOMTreeNode, TextMapperResponse } from "../types";
+import treeViewStyles from "./TreeView.module.css";
 
 interface TextMapperPanelProps {
   sendMessage: (message: any) => Promise<TextMapperResponse>;
@@ -117,16 +118,9 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
 
         {/* Render TreeView when tree data is available */}
         {treeData && (
-          <div className="tree-view-container" style={{ marginTop: "20px" }}>
-            <h3>DOM Tree View</h3>
-            <div
-              style={{
-                height: "400px",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                padding: "10px",
-              }}
-            >
+          <div className={treeViewStyles.treeViewContainer}>
+            <h3 className={treeViewStyles.treeViewTitle}>DOM Tree View</h3>
+            <div className={treeViewStyles.treeViewWrapper}>
               <TreeView
                 data={treeData}
                 aria-label="DOM Tree"
@@ -142,41 +136,31 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
                 }) => (
                   <div
                     {...getNodeProps()}
+                    className={treeViewStyles.treeNode}
                     style={{
                       paddingLeft: `${level * 20}px`,
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "2px 4px",
-                      fontSize: "14px",
-                      fontFamily: "monospace",
                     }}
                   >
                     {isBranch && (
-                      <span style={{ marginRight: "5px" }}>
+                      <span className={treeViewStyles.treeNodeExpander}>
                         {isExpanded ? "▼" : "▶"}
                       </span>
                     )}
-                    <span style={{ color: "#0066cc", fontWeight: "bold" }}>
+                    <span className={treeViewStyles.treeNodeTag}>
                       {element.metadata?.tagName || element.name}
                     </span>
                     {element.metadata?.id && (
-                      <span style={{ color: "#cc6600", marginLeft: "5px" }}>
+                      <span className={treeViewStyles.treeNodeId}>
                         #{element.metadata.id}
                       </span>
                     )}
                     {element.metadata?.className && (
-                      <span style={{ color: "#009900", marginLeft: "5px" }}>
+                      <span className={treeViewStyles.treeNodeClass}>
                         .{element.metadata.className}
                       </span>
                     )}
                     {element.metadata?.textContent && (
-                      <span
-                        style={{
-                          color: "#666",
-                          marginLeft: "10px",
-                          fontStyle: "italic",
-                        }}
-                      >
+                      <span className={treeViewStyles.treeNodeText}>
                         "
                         {typeof element.metadata.textContent === "string"
                           ? element.metadata.textContent.substring(0, 50)

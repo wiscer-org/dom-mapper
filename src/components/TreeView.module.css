@@ -1,0 +1,75 @@
+/* Tree View Component Styles */
+
+.treeViewContainer {
+  margin-top: 20px;
+}
+
+.treeViewTitle {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.treeViewWrapper {
+  height: 400px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  overflow: auto;
+  background-color: #fafafa;
+}
+
+/* Remove default list styling from tree view */
+.treeViewContainer :global(li) {
+  list-style: none;
+}
+
+.treeViewContainer :global(ul) {
+  padding-left: 0;
+  margin: 0;
+}
+
+/* Tree node styling */
+.treeNode {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  font-size: 14px;
+  font-family: monospace;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.treeNode:hover {
+  background-color: #e8f4fd;
+}
+
+.treeNodeExpander {
+  margin-right: 5px;
+  color: #666;
+  font-size: 12px;
+}
+
+.treeNodeTag {
+  color: #0066cc;
+  font-weight: bold;
+}
+
+.treeNodeId {
+  color: #cc6600;
+  margin-left: 5px;
+}
+
+.treeNodeClass {
+  color: #009900;
+  margin-left: 5px;
+}
+
+.treeNodeText {
+  color: #666;
+  margin-left: 10px;
+  font-style: italic;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
