@@ -1,24 +1,24 @@
 // Background script for DOMMapper Chrome Extension
-console.log("DOMMapper background script loaded");
+console.log("DOMMapper Background: script loaded");
 
 // Handle connections from DevTools panel
 chrome.runtime.onConnect.addListener((port: any) => {
-  console.log("🔌 Background: Connection established from:", port.name);
+  console.log("DOMMapper Background: Connection established from:", port.name);
 
   if (port.name === "devtools-panel") {
-    console.log("✅ Background: DevTools panel connected");
+    console.log("DOMMapper Background: DevTools panel connected");
 
     // Listen for messages on this connection
     port.onMessage.addListener((message: any) => {
-      console.log("🔄 Background: Received message via connection:", message);
+      console.log("DOMMapper Background: Received message via connection:", message);
 
       if (message.action === "executeTextMapper") {
-        console.log("🎯 Background: Processing Text Mapper request");
+        console.log("DOMMapper Background: Processing Text Mapper request");
 
         const tabId = message.tabId;
 
         if (!tabId) {
-          console.error("❌ Background: No tab ID provided");
+          console.error("DOMMapper Background: No tab ID provided");
           port.postMessage({
             success: false,
             error: "No tab ID provided",
@@ -37,13 +37,13 @@ chrome.runtime.onConnect.addListener((port: any) => {
           },
           (response: any) => {
             console.log(
-              "📨 Background: Response from content script:",
+              "DOMMapper Background: Response from content script:",
               response
             );
 
             if (chrome.runtime.lastError) {
               console.error(
-                "❌ Background: Error communicating with content script:",
+                "DOMMapper Background: Error communicating with content script:",
                 chrome.runtime.lastError
               );
 
@@ -87,7 +87,7 @@ chrome.runtime.onConnect.addListener((port: any) => {
 
     // Handle connection disconnect
     port.onDisconnect.addListener(() => {
-      console.log("🔌 Background: DevTools panel disconnected");
+      console.log("DOMMapper Background: DevTools panel disconnected");
     });
   }
 });
@@ -95,7 +95,7 @@ chrome.runtime.onConnect.addListener((port: any) => {
 // Keep the old message listener for other extension components
 chrome.runtime.onMessage.addListener(
   (message: any, sender: any, sendResponse: any) => {
-    console.log("📨 Background: Received runtime message:", message);
+    console.log("DOMMapper Background: Received runtime message:", message);
 
     // Handle messages from content script or other sources
     if (message.source !== "devtools-text-mapper") {
