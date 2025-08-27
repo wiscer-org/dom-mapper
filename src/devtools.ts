@@ -12,10 +12,21 @@ chrome.devtools.panels.create(
 
     // This callback runs in DevTools context, not panel context
     panel.onShown.addListener((window: any) => {
-      console.log("👁️ DevTools context: Panel is now visible");
+      // Focus the first interactive element or main heading
+      const h1 = window.document.querySelector('h1');
+      // h1.focus();
+      console.log(h1)
+
+      const firstInput = window.document.querySelector('input');
+      firstInput?.focus();
+
+      console.log("[DOMMapper] [DevTools] DevTools panel is now visible");
     });
 
     panel.onHidden.addListener(() => {
+      const h1 = window.document.querySelector('h1');
+      h1?.focus();
+
       console.log("👁️ DevTools context: Panel is now hidden");
     });
   }
