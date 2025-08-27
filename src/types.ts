@@ -31,7 +31,7 @@ export interface TextMapperResponse {
   success: boolean;
   message: string;
   searchTextsCount: number;
-  data: TextMapperResponseData;
+  data?: TextMapperResponseData;
   error?: string;
 }
 // Interface for the data in the response of Text Mapper operation
