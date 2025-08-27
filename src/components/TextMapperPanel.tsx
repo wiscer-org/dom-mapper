@@ -102,7 +102,7 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
               key={index}
               type="text"
               className="search-input"
-              placeholder="Enter text to search..."
+              placeholder="Enter text to map DOM elements..."
               value={text}
               onChange={(e) => handleSearchTextChange(index, e.target.value)}
             />
