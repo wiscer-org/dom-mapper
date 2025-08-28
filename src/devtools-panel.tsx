@@ -21,11 +21,13 @@ const DevToolsPanel: React.FC = () => {
   const establishBackgroundConnection = useCallback(() => {
     try {
       const port = chrome.runtime.connect({ name: "devtools-panel" });
-      console.log("🔌 DevTools: Connection established with background script");
+      console.log(
+        "[DOMMapper][DevTools] Connection established with background script"
+      );
 
       port.onMessage.addListener((response: any) => {
         console.log(
-          "📨 DevTools: Received response from background:",
+          "[DOMMapper][DevTools] Received response from background:",
           response
         );
 
@@ -42,11 +44,13 @@ const DevToolsPanel: React.FC = () => {
       });
 
       port.onDisconnect.addListener(() => {
-        console.log("🔌 DevTools: Connection to background script lost");
+        console.log(
+          "[DOMMapper][DevTools] Connection to background script lost"
+        );
         setConnection((prev) => ({ ...prev, port: null }));
 
         setTimeout(() => {
-          console.log("🔄 DevTools: Attempting to reconnect...");
+          console.log("[DOMMapper][DevTools] Attempting to reconnect...");
           establishBackgroundConnection();
         }, 1000);
       });
@@ -54,7 +58,7 @@ const DevToolsPanel: React.FC = () => {
       setConnection((prev) => ({ ...prev, port }));
     } catch (error) {
       console.error(
-        "❌ DevTools: Failed to connect to background script:",
+        "[DOMMapper][DevTools] Failed to connect to background script:",
         error
       );
     }
@@ -64,7 +68,9 @@ const DevToolsPanel: React.FC = () => {
     (message: any): Promise<any> => {
       return new Promise((resolve) => {
         if (!connection.port) {
-          console.error("❌ DevTools: No connection to background script");
+          console.error(
+            "[DOMMapper][DevTools] No connection to background script"
+          );
           resolve({
             success: false,
             error: "No connection to background script",
@@ -79,7 +85,7 @@ const DevToolsPanel: React.FC = () => {
 
         const messageWithId = { ...message, requestId };
         console.log(
-          "📤 DevTools: Sending message to background:",
+          "[DOMMapper][DevTools] Sending message to background:",
           messageWithId
         );
         connection.port.postMessage(messageWithId);
@@ -101,14 +107,15 @@ const DevToolsPanel: React.FC = () => {
 const App: React.FC = () => {
   return (
     <div className="container">
-      <h1>🛠️ DOM Mapper DevTools</h1>
+      <h1>DOM Mapper Heading</h1>
       <div className="welcome-text">
         Welcome custom dev tools
         <br />
         <small style={{ color: "#666" }}>Running in React Panel Context</small>
       </div>
-      <div className="status">✅ DevTools panel is ready</div>
-      <p>This is your custom DOM Mapper development tools panel.</p>
+      {/* <div className="status">✅ DevTools panel is ready</div> */}
+
+      {/* <p>This is your custom DOM Mapper development tools panel.</p> */}
 
       <DevToolsPanel />
     </div>
@@ -117,12 +124,14 @@ const App: React.FC = () => {
 
 // Initialize React app
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🎨 React Panel context: DevTools panel DOM ready");
+  console.log(
+    "[DOMMapper][DevTools] React Panel context: DevTools panel DOM ready"
+  );
 
   const container = document.getElementById("root");
   if (container) {
     const root = createRoot(container);
     root.render(<App />);
-    console.log("⚛️ React: DevTools panel rendered");
+    console.log("[DOMMapper][DevTools] React: DevTools panel rendered");
   }
 });
