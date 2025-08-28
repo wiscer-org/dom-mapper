@@ -4,7 +4,7 @@
 console.log("🔧 DevTools context: Initializing DOM Mapper DevTools");
 
 chrome.devtools.panels.create(
-  "DOM Mapper", // Panel title
+  "DOM Mapper", // Panel title, this will be read first when the panel is focused. It will be read '<title> Panel Propery Page'
   "icon16.png", // Icon path (optional, can be null)
   "devtools-panel.html", // Panel HTML file
   (panel: any) => {
