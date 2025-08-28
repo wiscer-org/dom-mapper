@@ -36,10 +36,10 @@ h1 {
 /* Text Mapper Section Styles */
 .text-mapper-section {
   margin-top: 30px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
+  /* padding: 20px; */
+  /* border: 1px solid #ddd; */
+  /* border-radius: 8px; */
+  /* background: #fafafa; */
   text-align: left;
 }
 

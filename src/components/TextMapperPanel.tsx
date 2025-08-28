@@ -8,7 +8,7 @@ interface TextMapperPanelProps {
 }
 
 const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
-  const [searchTexts, setSearchTexts] = useState<string[]>(["", "", ""]);
+  const [searchTexts, setSearchTexts] = useState<string[]>([""]); // Start with one input. Add more empty strings to initial number of inputs if needed.
   const [status, setStatus] = useState("Ready to map elements");
   const [statusClass, setStatusClass] = useState("status-text");
   const [treeData, setTreeData] = useState<INode[] | null>(null);
@@ -35,10 +35,12 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
       setStatusClass("status-text loading");
 
       const tabId = chrome.devtools.inspectedWindow.tabId;
-      console.log("🎯 DevTools inspected tab ID:", tabId);
+      console.log("[DOMMapper][DevTools][TextMapper] inspected tab ID:", tabId);
 
       if (!tabId) {
-        console.error("❌ No inspected tab ID found");
+        console.error(
+          "[DOMMapper][DevTools][TextMapper] No inspected tab ID found"
+        );
         setStatus("Error: No inspected tab found");
         setStatusClass("status-text error");
         return;
@@ -53,10 +55,15 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
         searchTexts: searchTextsArray,
       });
 
-      console.log("📨 TextMapperPanel: Final response:", response);
+      console.log(
+        "[DOMMapper][DevTools][TextMapper] Final response:",
+        response
+      );
 
       if (response.success) {
-        console.log("✅ Text mapper executed successfully via connection");
+        console.log(
+          "[DOMMapper][DevTools][TextMapper] executed successfully via connection"
+        );
 
         // Process tree data if available
         if (response.data?.domTree) {
@@ -65,7 +72,10 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
             setTreeData(flatData);
             console.log("🌳 Tree data processed:", flatData);
           } catch (error) {
-            console.error("❌ Error processing tree data:", error);
+            console.error(
+              "[DOMMapper][DevTools][TextMapper] Error processing tree data:",
+              error
+            );
           }
         }
 
@@ -77,13 +87,16 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
           setStatusClass("status-text");
         }, 3000);
       } else {
-        console.error("❌ Error response:", response);
+        console.error(
+          "[DOMMapper][DevTools][TextMapper] Error response:",
+          response
+        );
         const errorMsg = response.error || "Unknown error occurred";
         setStatus(`Error: ${errorMsg}`);
         setStatusClass("status-text error");
       }
     } catch (error) {
-      console.error("❌ Text mapping error:", error);
+      console.error("[DOMMapper][DevTools][TextMapper] error:", error);
       setStatus("Error executing text mapper");
       setStatusClass("status-text error");
     }
@@ -92,8 +105,7 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
   return (
     <div className="text-mapper-section">
       <div className="section-header">
-        <h2>📝 Text Mapper #2</h2>
-        <p>Map DOM elements by their text content</p>
+        <h2>Map DOM Elements by Texts</h2>
       </div>
       <div className="section-content">
         <div className="search-inputs">
@@ -102,17 +114,17 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
               key={index}
               type="text"
               className="search-input"
-              placeholder="Enter text to map DOM elements..."
+              placeholder="Enter text to map DOM elements.."
               value={text}
               onChange={(e) => handleSearchTextChange(index, e.target.value)}
             />
           ))}
         </div>
         <button className="add-input-button" onClick={addSearchInput}>
-          ➕ Add Input
+          ➕ Add more texts
         </button>
         <button className="map-button" onClick={executeTextMapping}>
-          🎯 Map by Texts
+          Map by Texts
         </button>
         <div className={statusClass}>{status}</div>
 

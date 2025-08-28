@@ -11,7 +11,12 @@
 </head>
 
 <body>
-    <h1 tabindex="10">Marson Panel</h1>
+    <!-- `tabindex` in H1 below will allow it to be focused and read by SR -->
+    <h1 tabindex="10">DOM Mapper
+    </h1>
+    <div class="welcome-text">
+        <small style="color: #666;">Dev Tools to map hierarchy of DOM elements</small>
+    </div>
     <div id="root"></div>
     <script src="devtools-panel.js"></script>
 </body>

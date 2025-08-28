@@ -103,19 +103,18 @@ const DevToolsPanel: React.FC = () => {
 
   return <TextMapperPanel sendMessage={sendMessageToBackground} />;
 };
-
+  
 const App: React.FC = () => {
   return (
     <div className="container">
-      <h1>DOM Mapper Heading</h1>
       <div className="welcome-text">
-        Welcome custom dev tools
-        <br />
-        <small style={{ color: "#666" }}>Running in React Panel Context</small>
+        {/* 
+          <br />
+          <small style={{ color: "#666" }}>Running in React Panel Context</small> 
+        */}
       </div>
-      {/* <div className="status">✅ DevTools panel is ready</div> */}
 
-      {/* <p>This is your custom DOM Mapper development tools panel.</p> */}
+      {/* <div className="status">✅ DevTools panel is ready</div> */}
 
       <DevToolsPanel />
     </div>
