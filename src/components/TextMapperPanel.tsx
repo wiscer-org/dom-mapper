@@ -5,8 +5,14 @@ import treeViewStyles from "./TreeView.module.css";
 
 const SEARCH_INPUT_CLASS = "search-input";
 
+interface MapperOptions {
+  removeRandomClasses: boolean;
+  removeAngularClasses: boolean;
+}
+
 interface TextMapperPanelProps {
   sendMessage: (message: any) => Promise<TextMapperResponse>;
+  options: MapperOptions;
 }
 
 /**
@@ -26,7 +32,10 @@ function focusOnFirstEmptySearchInput() {
   }
 }
 
-const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
+const TextMapperPanel: React.FC<TextMapperPanelProps> = ({
+  sendMessage,
+  options,
+}) => {
   const [searchTexts, setSearchTexts] = useState<string[]>([""]); // Start with one input. Add more empty strings to initial number of inputs if needed.
   const [status, setStatus] = useState("Ready to map elements");
   const [statusClass, setStatusClass] = useState("status-text");
@@ -76,6 +85,7 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
         action: "executeTextMapper",
         tabId: tabId,
         searchTexts: searchTextsArray,
+        options,
       });
 
       console.log(

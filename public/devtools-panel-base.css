@@ -33,6 +33,18 @@ h1 {
   margin: 20px 0;
 }
 
+/* Options section */
+#dommapper-options {
+  text-align: left;
+}
+#dommapper-options label {
+  display: block;
+  clear: both;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
 /* Text Mapper Section Styles */
 .text-mapper-section {
   margin-top: 30px;

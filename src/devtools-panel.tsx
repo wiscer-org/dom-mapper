@@ -12,6 +12,8 @@ const DevToolsPanel: React.FC = () => {
     port: null,
     pendingRequests: new Map(),
   });
+  const [removeRandomClasses, setRemoveRandomClasses] = useState(true);
+  const [removeAngularClasses, setRemoveAngularClasses] = useState(true);
 
   // Establish background connection
   useEffect(() => {
@@ -101,18 +103,48 @@ const DevToolsPanel: React.FC = () => {
     [connection.port, connection.pendingRequests]
   );
 
-  return <TextMapperPanel sendMessage={sendMessageToBackground} />;
+  return (
+    <>
+      <div id="dommapper-options">
+        <h2>Options</h2>
+        <label>
+          <input
+            type="checkbox"
+            checked={removeRandomClasses}
+            onChange={(e) => setRemoveRandomClasses(e.target.checked)}
+          />
+          Remove randomly generated class names (has more than 3 numbers)
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={removeAngularClasses}
+            onChange={(e) => setRemoveAngularClasses(e.target.checked)}
+          />
+          Remove Angular generated class names (prefixed with "ng-", "cdk",
+          etc.)
+        </label>
+      </div>
+      <TextMapperPanel
+        sendMessage={sendMessageToBackground}
+        options={{
+          removeRandomClasses,
+          removeAngularClasses,
+        }}
+      />
+    </>
+  );
 };
-  
+
 const App: React.FC = () => {
   return (
     <div className="container">
+      {/* 
       <div className="welcome-text">
-        {/* 
           <br />
           <small style={{ color: "#666" }}>Running in React Panel Context</small> 
-        */}
-      </div>
+      </div> 
+      */}
 
       {/* <div className="status">✅ DevTools panel is ready</div> */}
 
