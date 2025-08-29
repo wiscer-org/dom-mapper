@@ -3,8 +3,27 @@ import TreeView, { flattenTree, INode } from "react-accessible-treeview";
 import { ITreeNode, DOMTreeNode, TextMapperResponse } from "../types";
 import treeViewStyles from "./TreeView.module.css";
 
+const SEARCH_INPUT_CLASS = "search-input";
+
 interface TextMapperPanelProps {
   sendMessage: (message: any) => Promise<TextMapperResponse>;
+}
+
+/**
+ * Focus on the first found empty search input field
+ * This is a utility function to be called after adding a new input
+ */
+function focusOnFirstEmptySearchInput() {
+  const inputElements = document.getElementsByClassName(SEARCH_INPUT_CLASS);
+
+  // Iterate the elements, focus the first empty one
+  for (let i = 0; i < inputElements.length; i++) {
+    const input = inputElements[i] as HTMLInputElement;
+    if (input.value.trim() === "") {
+      input.focus();
+      return;
+    }
+  }
 }
 
 const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
@@ -23,6 +42,10 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
 
   const addSearchInput = () => {
     setSearchTexts((prev) => [...prev, ""]);
+    // Focus the new input after a slight delay to ensure it is rendered
+    setTimeout(() => {
+      focusOnFirstEmptySearchInput();
+    }, 100);
   };
 
   const getSearchTexts = (): string[] => {
@@ -113,7 +136,7 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
             <input
               key={index}
               type="text"
-              className="search-input"
+              className={SEARCH_INPUT_CLASS}
               placeholder="Enter text to map DOM elements.."
               value={text}
               onChange={(e) => handleSearchTextChange(index, e.target.value)}
@@ -121,10 +144,10 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({ sendMessage }) => {
           ))}
         </div>
         <button className="add-input-button" onClick={addSearchInput}>
-          ➕ Add more texts
+          Add more texts
         </button>
         <button className="map-button" onClick={executeTextMapping}>
-          Map by Texts
+          Map elements by texts
         </button>
         <div className={statusClass}>{status}</div>
 
