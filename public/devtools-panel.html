@@ -12,12 +12,36 @@
 
 <body>
     <!-- `tabindex` in H1 below will allow it to be focused and read by SR -->
-    <h1 tabindex="10">DOM Mapper
-    </h1>
+    <h1 tabindex="10">DOM Mapper</h1>
+
     <div class="welcome-text">
         <small style="color: #666;">Dev Tools to map hierarchy of DOM elements</small>
     </div>
     <div id="root"></div>
+
+    <!-- A section explaining about what is DOMMapper -->
+
+    <div>
+        <h2>What is DOMMapper?</h2>
+        <p>
+            The standard Chrome DevTools Elements panel, while powerful, often presents a cluttered and overwhelming
+            view of the DOM, making it difficult for developers to quickly and accurately identify the CSS selectors
+            needed for automation or scraping. The DOM tree is often filled with a "sea of noise"—hundreds of elements,
+            attributes, and complex, auto-generated class names from modern web frameworks like Angular. This extraneous
+            information forces developers to manually sift through layers of code, breaking the workflow and introducing
+            potential errors when selecting an element.
+        </p>
+        <p>
+            The motivation for developing DOMMapper is to streamline this process by providing a clean, focused view of
+            the DOM. DOMMapper addresses this problem by cloning the existing DOM and intelligently filtering out all
+            unrelated information. It removes elements that don't contain the user's specified text, and it strips away
+            unnecessary attributes and framework-generated class names. This creates a simplified "map" of the DOM,
+            highlighting only the relevant parent-child relationships and attributes, enabling developers to quickly and
+            confidently find the stable and human-readable CSS selectors they need to interact with a page.</p>
+        </p>
+    </div>
+
+
     <script src="devtools-panel.js"></script>
 </body>
 
