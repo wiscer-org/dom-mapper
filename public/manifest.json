@@ -16,10 +16,18 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://gemini.google.com/*"],
-      "js": ["content.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
     }
   ],
   "devtools_page": "devtools.html",
-  "permissions": ["scripting", "activeTab", "tabs"]
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "tabs"
+  ]
 }
