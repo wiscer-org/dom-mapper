@@ -17,7 +17,8 @@ chrome.devtools.panels.create(
       // h1.focus();
       console.log(h1)
 
-      const firstInput = window.document.querySelector('input');
+      // Note: The input class name must matches the one in the TextMapperPanel component
+      const firstInput = window.document.querySelector(".search-input") as HTMLInputElement;
       firstInput?.focus();
 
       console.log("[DOMMapper] [DevTools] DevTools panel is now visible");
