@@ -36,7 +36,7 @@ export default class TextMapper {
     this.parent.announce({
       msg: "Text Mapper is ready",
     });
-    console.log("TextMapper is ready to interact with text content");
+    console.log("[DOMMapper][TextMapper] ready to interact with text content");
   }
 
   async createMap(
@@ -52,8 +52,8 @@ export default class TextMapper {
       true
     ) as HTMLElement;
 
-    console.log("cloned DOM:");
-    console.log(domTree.children);
+    // console.log("cloned DOM:");
+    // console.log(domTree.children);
 
     // Find all direct elements that contain the text nodes in the document
     this.parent.announce({ msg: "Finding elements by texts" });
@@ -61,8 +61,8 @@ export default class TextMapper {
       domTree,
       input
     );
-    console.log("Elements with text: ");
-    console.log(this.textContentElements);
+    // console.log("Elements with text: ");
+    // console.log(this.textContentElements);
 
     // Check if elements with the given texts are found
     if (this.textContentElements.length === 0) {
@@ -142,11 +142,7 @@ export default class TextMapper {
 
           if (parentElement && !foundElements.includes(parentElement)) {
             foundElements.push(parentElement);
-            console.log(
-              `Found text "${searchText}" in element:`,
-              parentElement.tagName,
-              parentElement.className
-            );
+            // console.log(`Found text "${searchText}" in element:`, parentElement.tagName,  parentElement.className );
           }
         }
       }
@@ -200,7 +196,7 @@ export default class TextMapper {
       msg: `Marked ${markedCount} elements with ${TextMapper.KEEP_ELEMENT} attribute`,
     });
 
-    console.log(`Total elements marked for keeping: ${markedCount}`);
+    // console.log(`Total elements marked for keeping: ${markedCount}`);
   }
   /**
    * Clean / Remove elements that does not have the mark.
@@ -239,19 +235,19 @@ export default class TextMapper {
       commentNodes.push(commentNode as Comment);
     }
 
-    console.log(`Found ${commentNodes.length} comment nodes to remove`);
+    // console.log(`Found ${commentNodes.length} comment nodes to remove`);
 
     // Now remove all collected comment nodes
     let removedCount = 0;
     commentNodes.forEach((node) => {
       if (node.parentNode) {
-        console.log("Removing comment node:", node.textContent?.trim());
+        // console.log("Removing comment node:", node.textContent?.trim());
         node.parentNode.removeChild(node);
         removedCount++;
       }
     });
 
-    console.log(`Successfully removed ${removedCount} comment nodes`);
+    // console.log(`Successfully removed ${removedCount} comment nodes`);
   }
 
   /**
