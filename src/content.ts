@@ -56,6 +56,8 @@ async function executeTextMapper(
 
   // Handle the search texts array
   const searchTexts = message.searchTexts || [];
+  const options = message.options || {};
+
   // Pointer to the next result
   let data: TextMapperResponseData = {
     textContentElementsCount: 0,

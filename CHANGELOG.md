@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [On progress]
 
 - Custom Dev Tool display as tree view with React library: accessible-tree-view.
+- Create options in DevTools to remove class names
 
 ## [0.1.0] - 2025-07-20
 

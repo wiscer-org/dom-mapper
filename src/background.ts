@@ -34,6 +34,7 @@ chrome.runtime.onConnect.addListener((port: any) => {
             action: "executeTextMapper",
             source: "background-forwarded",
             searchTexts: message.searchTexts, // Forward the searchTexts
+            options: message.options, // Forward the options
           },
           (response: any) => {
             console.log(
@@ -47,7 +48,7 @@ chrome.runtime.onConnect.addListener((port: any) => {
                 chrome.runtime.lastError
               );
 
-              //             // Send error response back via connection
+              // Send error response back via connection
               if (
                 chrome.runtime.lastError.message?.includes(
                   "Receiving end does not exist"
@@ -56,7 +57,7 @@ chrome.runtime.onConnect.addListener((port: any) => {
                 port.postMessage({
                   success: false,
                   error:
-                    "Content script not loaded. Please navigate to gemini.google.com and reload the page.",
+                    "Content script not loaded. Please reload the page.",
                   requestId: message.requestId,
                 });
               } else {

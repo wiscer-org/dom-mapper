@@ -3,7 +3,7 @@ import TreeView, { flattenTree, INode } from "react-accessible-treeview";
 import { ITreeNode, DOMTreeNode, TextMapperResponse } from "../types";
 import treeViewStyles from "./TreeView.module.css";
 
-const SEARCH_INPUT_CLASS = "search-input";
+export const SEARCH_INPUT_CLASS = "search-input";
 
 interface MapperOptions {
   removeRandomClasses: boolean;
@@ -78,9 +78,12 @@ const TextMapperPanel: React.FC<TextMapperPanelProps> = ({
         return;
       }
 
-      setStatus("Sending command via background connection...");
+      setStatus(
+        "[DOMMapper][TextMapperPanel]Sending command via background connection..."
+      );
 
       const searchTextsArray = getSearchTexts();
+
       const response = await sendMessage({
         action: "executeTextMapper",
         tabId: tabId,
