@@ -2,8 +2,10 @@ import DomMapper from "./DomMapper";
 import { TextMapperResponse, TextMapperResponseData } from "./types";
 
 
-// Content script for DOMMapper Chrome Extension
-console.log("[DOMMapper] [content]: script is loaded");
+/**
+ * Content script for DOMMapper Chrome Extension
+ */
+// console.log("[DOMMapper] [content]: script is loaded");
 
 // Init the library
 const domMapper = new DomMapper();
@@ -13,7 +15,6 @@ domMapper.start();
 
 (() => {
 
-
   // Listen for messages from DevTools relayed by the background script.
   chrome.runtime.onMessage.addListener(
     // IMPORTANT: Do not use async here. For the port to stay open provide non-async and returning `true`. Use the sendResponse function
@@ -22,7 +23,7 @@ domMapper.start();
       sender: chrome.runtime.MessageSender,
       sendResponse: (response: any) => void
     ) => {
-      console.log("[DOMMapper] [content]: received message:", message);
+      // console.log("[DOMMapper] [content]: received message:", message);
 
       if (message.action === "executeTextMapper") {
         executeTextMapper(message, sender, sendResponse);
@@ -38,6 +39,7 @@ domMapper.start();
     }
   );
 })();
+
 /**
  * Execute the text mapper logic
  * @returns 
@@ -48,8 +50,8 @@ async function executeTextMapper(
   sendResponse: (response: any) => void)
   : Promise<void> {
 
-  // console.log("[DOMMapper] [content]: Executing Text Mapper from DevTools");
-  // console.log("[DOMMapper] [content]: Search texts received:", message.searchTexts);
+  // console.log("[DOMMapper][content]: Executing Text Mapper from DevTools");
+  // console.log("[DOMMapper][content]: Search texts received:", message.searchTexts);
 
   // Handle the search texts array
   const searchTexts = message.searchTexts || [];
@@ -61,10 +63,7 @@ async function executeTextMapper(
   };
 
   if (searchTexts.length > 0) {
-    console.log(
-      `[DOMMapper] [content]: Processing ${searchTexts.length} search texts:`,
-      searchTexts
-    );
+    // console.log(`[DOMMapper][content] Processing ${searchTexts.length} search texts:`, searchTexts);
 
     // Set the search texts as inputs
     const inputs = {
@@ -84,9 +83,9 @@ async function executeTextMapper(
 
     // Attach the DOM string tree to the response's data
     data.domTree = domTree;
-    console.log("[DOMMapper] [content]: sending data:", data);
+    // console.log("[DOMMapper][content]: sending data:", data);
   } else {
-    console.log("[DOMMapper] [content]: No search texts provided");
+    // console.log("[DOMMapper][content]: No search texts provided");
   }
 
   const response: TextMapperResponse = {
@@ -100,14 +99,14 @@ async function executeTextMapper(
   // Send response back to DevTools
   sendResponse(response);
 
-  // return true; // Keep the message channel open for async response
+  // No need to return true here as the function is async
 }
 
 /**
  * This is only a test function to verify message passing
  */
 async function panelClicked(sendResponse: (response: any) => void): Promise<void> {
-  console.log("[DOMMapper] [content] Panel was clicked");
+  console.log("[DOMMapper][content] Panel was clicked");
   sendResponse({ success: true });
 }
 

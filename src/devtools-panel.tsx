@@ -23,15 +23,10 @@ const DevToolsPanel: React.FC = () => {
   const establishBackgroundConnection = useCallback(() => {
     try {
       const port = chrome.runtime.connect({ name: "devtools-panel" });
-      console.log(
-        "[DOMMapper][DevTools] Connection established with background script"
-      );
+      // console.log("[DOMMapper][DevTools] Connection established with background script");
 
       port.onMessage.addListener((response: any) => {
-        console.log(
-          "[DOMMapper][DevTools] Received response from background:",
-          response
-        );
+        // console.log("[DOMMapper][DevTools] Received response from background ",response);
 
         if (
           response.requestId &&
@@ -46,13 +41,11 @@ const DevToolsPanel: React.FC = () => {
       });
 
       port.onDisconnect.addListener(() => {
-        console.log(
-          "[DOMMapper][DevTools] Connection to background script lost"
-        );
+        // console.log("[DOMMapper][DevTools] Connection to background script lost");
         setConnection((prev) => ({ ...prev, port: null }));
 
         setTimeout(() => {
-          console.log("[DOMMapper][DevTools] Attempting to reconnect...");
+          // console.log("[DOMMapper][DevTools] Attempting to reconnect...");
           establishBackgroundConnection();
         }, 1000);
       });
@@ -86,11 +79,11 @@ const DevToolsPanel: React.FC = () => {
         connection.pendingRequests.set(requestId, resolve);
 
         const messageWithId = { ...message, requestId };
-        console.log(
-          "[DOMMapper][DevTools] Sending message to background:",
-          messageWithId
-        );
         connection.port.postMessage(messageWithId);
+        // console.log(
+        //   "[DOMMapper][DevTools] Sending message to background:",
+        //   messageWithId
+        // );
 
         setTimeout(() => {
           if (connection.pendingRequests.has(requestId)) {
@@ -156,14 +149,14 @@ const App: React.FC = () => {
 
 // Initialize React app
 document.addEventListener("DOMContentLoaded", () => {
-  console.log(
-    "[DOMMapper][DevTools] React Panel context: DevTools panel DOM ready"
-  );
+  // console.log(
+  //   "[DOMMapper][DevTools] React Panel context: DevTools panel DOM ready"
+  // );
 
   const container = document.getElementById("root");
   if (container) {
     const root = createRoot(container);
     root.render(<App />);
-    console.log("[DOMMapper][DevTools] React: DevTools panel rendered");
+    // console.log("[DOMMapper][DevTools] React: DevTools panel rendered");
   }
 });
