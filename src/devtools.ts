@@ -11,10 +11,17 @@ chrome.devtools.panels.create(
     console.log("[DOMMapper][DevTools] panel created successfully");
 
     // This callback runs in DevTools context, not panel context
-    panel.onShown.addListener((window: any) => {
+    panel.onShown.addListener(async (window: any) => {
+      // Note: The screen reader is expected to read something like 'DOM Mapper Panel ..' so the SR users will know when the panel is shown
+      // However, this sometimes not working when switching between panels.
+      // To ensure the screen reader to read 'DOM Maper Panel ..', we will focus to the H1 element, wait a bit, the focus to the input box.
+
       // Focus the first interactive element or main heading
       const h1 = window.document.querySelector('h1');
-      h1.focus();
+      h1?.focus();
+
+      // Wait a little bit
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Note: The input class name must matches the one in the TextMapperPanel component
       const firstInput = window.document.querySelector(".search-input") as HTMLInputElement;
