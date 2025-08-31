@@ -6,15 +6,15 @@ type TextMapperInput = {
 };
 
 type TextMapperOptions = {
-  // Ignore classes or attributes that seems related to angular
-  ignoreAngular?: boolean;
-  // Ignore random generated classes. This could be identified > 3 numbers in a string
-  ignoreRandomClasses?: boolean;
+  // Remove classes or attributes that seems related to angular
+  removeAngularClasses?: boolean;
+  // Remove random generated classes. This could be identified > 3 numbers in a string
+  removeRandomClasses?: boolean;
 };
 
 const defaultOptions: TextMapperOptions = {
-  ignoreAngular: true,
-  ignoreRandomClasses: true,
+  removeAngularClasses: true,
+  removeRandomClasses: true,
 };
 
 export default class TextMapper {
@@ -41,8 +41,9 @@ export default class TextMapper {
 
   async createMap(
     input: TextMapperInput,
-    initialOptions: Partial<TextMapperOptions> = defaultOptions
+    initialOptions: Partial<TextMapperOptions>
   ): Promise<HTMLElement> {
+
     // Merge default options with initial options
     const options: TextMapperOptions = { ...defaultOptions, ...initialOptions };
 
@@ -52,17 +53,12 @@ export default class TextMapper {
       true
     ) as HTMLElement;
 
-    // console.log("cloned DOM:");
-    // console.log(domTree.children);
-
     // Find all direct elements that contain the text nodes in the document
     this.parent.announce({ msg: "Finding elements by texts" });
     this.textContentElements = await this.findElementsByTextContents(
       domTree,
       input
     );
-    // console.log("Elements with text: ");
-    // console.log(this.textContentElements);
 
     // Check if elements with the given texts are found
     if (this.textContentElements.length === 0) {
@@ -85,6 +81,14 @@ export default class TextMapper {
     // Remove the added attribute
     await this.removeMarkAttribute(domTree);
 
+    // Apply the options
+    if (options.removeRandomClasses) {
+      this.removeRandomClasses(domTree);
+    }
+    if (options.removeAngularClasses) {
+      this.removeAngularClasses(domTree);
+    }
+
     // We have a new DOM tree with only the elements we want to keep.
     this.parent.announce({ msg: "About to send the cloned DOM to background" });
 
@@ -103,6 +107,55 @@ export default class TextMapper {
 
     return domTree;
   }
+  /**
+   * Remove all classes that seems related to Angular framework, prefix with `ng-`, `cdk-`, `_ng`
+   * @param domTree 
+   */
+  /**
+ * Remove all classes that seems related to Angular framework, prefix with `ng-`, `cdk-`, `_ng`
+ * @param domTree 
+ */
+  removeAngularClasses(domTree: HTMLElement) {
+    const angularClassPatterns = /^(ng-|cdk-)|_ng/;
+    const allElements = domTree.querySelectorAll('*');
+
+    allElements.forEach(element => {
+      const classesToRemove: string[] = [];
+      element.classList.forEach(className => {
+        if (angularClassPatterns.test(className)) {
+          classesToRemove.push(className);
+        }
+      });
+
+      if (classesToRemove.length > 0) {
+        element.classList.remove(...classesToRemove);
+      }
+    });
+
+  }
+  /**
+   * Remove classes that seems random generated, identified by having more than 3 digits in the class name
+   * @param domTree 
+   */
+  removeRandomClasses(domTree: HTMLElement) {
+    const allElements = domTree.querySelectorAll('*');
+
+    allElements.forEach(element => {
+      const classesToRemove: string[] = [];
+      element.classList.forEach(className => {
+        const digitCount = (className.match(/\d/g) || []).length;
+        if (digitCount > 3) {
+          classesToRemove.push(className);
+        }
+      });
+
+      if (classesToRemove.length > 0) {
+        element.classList.remove(...classesToRemove);
+      }
+    });
+
+  }
+
   /**
    * Find all elements that is a parent of the exact texts
    * @param domTree

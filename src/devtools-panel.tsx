@@ -107,6 +107,7 @@ const DevToolsPanel: React.FC = () => {
     <>
       <div id="dommapper-options">
         <h2>Options</h2>
+        {/* This options should extend the `TextMapper.TextMapperOptions */}
         <label>
           <input
             type="checkbox"

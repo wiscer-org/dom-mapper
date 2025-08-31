@@ -48,11 +48,8 @@ async function executeTextMapper(
   sendResponse: (response: any) => void)
   : Promise<void> {
 
-  console.log("[DOMMapper] [content]: Executing Text Mapper from DevTools");
-
-
-
-  console.log("[DOMMapper] [content]: Search texts received:", message.searchTexts);
+  // console.log("[DOMMapper] [content]: Executing Text Mapper from DevTools");
+  // console.log("[DOMMapper] [content]: Search texts received:", message.searchTexts);
 
   // Handle the search texts array
   const searchTexts = message.searchTexts || [];
@@ -74,12 +71,9 @@ async function executeTextMapper(
       textContents: searchTexts,
     };
 
-    console.log('textMapper');
-    console.log(domMapper);
-
     // Map by texts
     const domElementTree = domMapper.textMapper
-      ? await domMapper.textMapper.createMap(inputs)
+      ? await domMapper.textMapper.createMap(inputs, options)
       : console.warn("text mapper is undefined");
 
     // The new DOM tree should be not void
