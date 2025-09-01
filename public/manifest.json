@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "DOMMapper",
   "version": "0.1.0",
-  "description": "A Chrome extension for DOM mapping.",
+  "description": "Simplifying the DOM for cleaner CSS selector mapping",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
