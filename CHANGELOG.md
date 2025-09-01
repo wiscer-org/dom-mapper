@@ -23,8 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2025-07-20
 
-### Added
-
 - Initial Chrome extension setup with Manifest v3
 - DOM mapping functionality for interactive elements (buttons, inputs, links, selects, textareas)
 - Content script targeting gemini.google.com with floating UI interface
