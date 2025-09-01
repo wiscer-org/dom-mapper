@@ -7,18 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Content script create hidden element with aria-live attribute to announce to screen reader. This used as debugging tool.
-- Clone DOM with content script.
-- Clean elements of the cloned DOM in content script.
-- Render Custom Dev Tool, DOM Mapper and Text Mapper,with Vanilla JS.
-- Provide form and button to trigger Text Mapper function in content script.
-- Send the cloned DOM to background, then relay to custom Dev Tool.
-- Custom Dev Tool display as tree view with React library: accessible-tree-view.
-- Create options in DevTools to remove class names
-
 ## [On progress]
 
 -
+
+## [1.0.0] - 2025-09-01
+
+### Added
+
+- Content script create hidden element with aria-live attribute to announce to screen reader. This used as debugging tool.
+- Render Custom Dev Tool, DOM Mapper and Text Mapper, with React JS.
+- Provide form and button to trigger Text Mapper function in content script.
+- Display the 'cleaned' DOM in DevTools as tree.
+- Create options in DevTools to remove class names
 
 ## [0.1.0] - 2025-07-20
 
