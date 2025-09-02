@@ -10,3 +10,6 @@ coverage
 *.tmp
 *.swp
 *.bak
+
+# Ignore bundled built files
+dom-mapper.zip
